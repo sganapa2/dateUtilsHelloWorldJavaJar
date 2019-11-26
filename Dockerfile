@@ -1,13 +1,16 @@
-FROM maven:3.5.2-jdk-9 AS build  
+#FROM maven:3.5.2-jdk-9 AS build  
+FROM maven:3.3-jdk-8 AS build
 COPY src /usr/src/app/src  
 COPY pom.xml /usr/src/app  
 RUN mvn -f /usr/src/app/pom.xml clean package
 
 
-FROM registry.access.redhat.com/ubi7-minimal
-USER root
+FROM santoshatdocker/my_ubi7-jdk8:latest
 
-RUN microdnf install java-1.8.0-openjdk-headless --nodocs && microdnf clean all
+#FROM registry.access.redhat.com/ubi7-minimal
+#USER root
+
+#RUN microdnf install java-1.8.0-openjdk-headless --nodocs && microdnf clean all
 
 # Set the JAVA_HOME variable to make it clear where Java is located
 ENV JAVA_HOME /etc/alternatives/jre
@@ -23,6 +26,6 @@ ENV _JAVA_OPTIONS "-Xms256m -Xmx512m -Djava.awt.headless=true"
 
 COPY --from=build /usr/src/app/target/scheduler.jar /usr/app/scheduler.jar  
 
-ENTRYPOINT ["java", "-jar", "/usr/app/scheduler.jar"]
+#ENTRYPOINT ["java", "-jar", "/usr/app/scheduler.jar"]
 
 
