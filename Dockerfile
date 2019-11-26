@@ -21,8 +21,8 @@ EXPOSE 8080 8081
 
 ENV _JAVA_OPTIONS "-Xms256m -Xmx512m -Djava.awt.headless=true"
 
-COPY --from=build /usr/src/app/target/scheduler-service.jar /usr/app/scheduler-service.jar  
+COPY --from=build /usr/src/app/target/scheduler.jar /usr/app/scheduler.jar  
 
-ENTRYPOINT ["java", "-jar", "/usr/app/scheduler-service.jar"]
+ENTRYPOINT ["java", "-jar", "/usr/app/scheduler.jar"]
 
 
