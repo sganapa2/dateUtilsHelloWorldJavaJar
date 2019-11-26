@@ -1,26 +1,36 @@
 package com.mkyong.core.utils;
-
-import org.apache.log4j.Logger;
+import java.util.concurrent.*;
+import java.util.*;
 import org.joda.time.LocalDate;
 
 public class App {
 
-	private static final Logger logger = Logger.getLogger(App.class);
 
 	public static void main(String[] args) {
 
-		System.out.println(getLocalCurrentDate());
+
+//ScheduledExecutorService scheduler
+//                            = Executors.newSingleThreadScheduledExecutor();
+ 
+//        Runnable task = new Runnable() {
+//            public void run() {
+//                System.out.println("Hi!");
+ //           }
+ //       };
+ 
+//        int delay = 5;
+//        scheduler.schedule(task, delay, TimeUnit.SECONDS);
+        //scheduler.shutdown();
+
+Timer t = new Timer();
+t.schedule(new TimerTask() {
+    @Override
+    public void run() {
+       System.out.println("Hello World");
+    }
+}, 0, 5000);
+
 	}
 
-	private static String getLocalCurrentDate() {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("getLocalCurrentDate() is executed!");
-		}
-
-		LocalDate date = new LocalDate();
-		return date.toString();
-
-	}
 
 }
