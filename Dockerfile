@@ -1,3 +1,9 @@
+FROM maven:3.5.2-jdk-9 AS build  
+COPY src /usr/src/app/src  
+COPY pom.xml /usr/src/app  
+RUN mvn -f /usr/src/app/pom.xml clean package
+
+
 FROM registry.access.redhat.com/ubi7-minimal
 USER root
 
@@ -12,11 +18,11 @@ RUN mkdir -p /app
 
 # Expose port to listen to
 EXPOSE 8080 8081
-# Copy the MicroProfile starter app
-ADD target/scheduler.jar /app/
-
-#RUN echo $JAVA_HOME
 
 ENV _JAVA_OPTIONS "-Xms256m -Xmx512m -Djava.awt.headless=true"
 
-ENTRYPOINT ["java", "-jar", "/app/scheduler.jar"]
+COPY --from=build /usr/src/app/target/scheduler-service.jar /usr/app/scheduler-service.jar  
+
+ENTRYPOINT ["java", "-jar", "/usr/app/scheduler-service.jar"]
+
+
