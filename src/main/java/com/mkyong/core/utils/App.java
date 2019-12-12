@@ -9,26 +9,15 @@ public class App {
 	public static void main(String[] args) {
 
 
-//ScheduledExecutorService scheduler
-//                            = Executors.newSingleThreadScheduledExecutor();
- 
-//        Runnable task = new Runnable() {
-//            public void run() {
-//                System.out.println("Hi!");
- //           }
- //       };
- 
-//        int delay = 5;
-//        scheduler.schedule(task, delay, TimeUnit.SECONDS);
-        //scheduler.shutdown();
 
-Timer t = new Timer();
+/* Timer t = new Timer();
 t.schedule(new TimerTask() {
     @Override
-    public void run() {
+    public void run() { */
        System.out.println("Hello World");
-    }
+    /*}
 }, 0, 5000);
+*/
 
 	}
 

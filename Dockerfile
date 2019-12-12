@@ -1,31 +1,33 @@
-#FROM maven:3.5.2-jdk-9 AS build  
-FROM maven:3.3-jdk-8 AS build
-COPY src /usr/src/app/src  
-COPY pom.xml /usr/src/app  
-RUN mvn -f /usr/src/app/pom.xml clean package
+FROM alpine:3.6
+#FROM openjdk:8-jre-alpine
+
+#RUN apt-get install cronie
 
 
-FROM santoshatdocker/my_ubi7-jdk8:latest
+USER root
 
-#FROM registry.access.redhat.com/ubi7-minimal
-#USER root
+RUN apk update && apk add bash
+RUN apk add openjdk8
+ADD java-version-cron /temp/java-version-cron
+RUN chmod 777 /etc/
 
-#RUN microdnf install java-1.8.0-openjdk-headless --nodocs && microdnf clean all
 
-# Set the JAVA_HOME variable to make it clear where Java is located
-ENV JAVA_HOME /etc/alternatives/jre
-ENV PATH $PATH:$JAVA_HOME/bin
+ADD scheduler.jar /etc/
+RUN cat /temp/java-version-cron >> /etc/crontabs/root
+RUN rm /temp/java-version-cron
 
-# Dir for my app
-RUN mkdir -p /app
+RUN touch /var/log/cron.log
 
-# Expose port to listen to
-EXPOSE 8080 8081
+CMD crond 2>&1  >/dev/null && tail -f /var/log/cron.log
 
-ENV _JAVA_OPTIONS "-Xms256m -Xmx512m -Djava.awt.headless=true"
 
-COPY --from=build /usr/src/app/target/scheduler.jar /usr/app/scheduler.jar  
 
-#ENTRYPOINT ["java", "-jar", "/usr/app/scheduler.jar"]
+# copy crontabs for root user
+#COPY hello-cron  /etc/crontabs/root
+#COPY abc.sh  /etc/crontabs/abc.sh
+#COPY target/scheduler.jar /etc/crontabs
 
+
+# start crond with log level 8 in foreground, output to stderr
+#CMD ["crond", "-f", "-d", "8"]
 
